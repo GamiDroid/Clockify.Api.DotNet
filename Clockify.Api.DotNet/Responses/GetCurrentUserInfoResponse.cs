@@ -1,7 +1,7 @@
 ﻿using Clockify.Api.DotNet.Models;
 
 namespace Clockify.Api.DotNet.Responses;
-public class GetCurrentUserInfoResponse : Response<CurrentUserInfo>
+public class GetCurrentUserInfoResponse : Response
 {
-    public CurrentUserInfo CurrentUserInfo => Data;
+    public CurrentUserInfo CurrentUserInfo => Data as CurrentUserInfo ?? new();
 }
