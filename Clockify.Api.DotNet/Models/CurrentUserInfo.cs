@@ -8,11 +8,11 @@ public sealed class CurrentUserInfo
     public ICollection<MembershipDto> Memberships { get; set; } = Array.Empty<MembershipDto>();
     public string? Name { get; set; }
     public string? ProfilePicture { get; set; }
-    public UserSettingsDtoV1? Settings { get; set; }
+    public UserSettingsDto? Settings { get; set; }
     public UserStatus? Status { get; set; }
 }
 
-public sealed class UserSettingsDtoV1
+public sealed class UserSettingsDto
 {
     public bool? CollapseAllProjectLists { get; set; }
     public bool? DashboardPinToTop { get; set; }

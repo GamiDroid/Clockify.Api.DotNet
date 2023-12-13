@@ -1,5 +1,6 @@
 ﻿
 using Clockify.Api.DotNet.Models;
+using Clockify.Api.DotNet.Requests;
 using Clockify.Api.DotNet.Responses;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -22,7 +23,7 @@ public class ClockifyApiClient : IDisposable
         _serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
         {
             Converters = {
-                new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper)
+                new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper),
             },
         };
     }
@@ -43,6 +44,20 @@ public class ClockifyApiClient : IDisposable
             return new GetProjectsResponse { StatusCode = response.StatusCode };
         var projects = await response.Content.ReadFromJsonAsync<ICollection<ProjectDto>>(options: _serializerOptions);
         return new GetProjectsResponse { StatusCode = response.StatusCode, Data = projects };
+    }
+
+    public async Task<GetSummaryReportResponse> GetSummaryReportAsync(string workspaceId, DateTimeOffset dateRangeStart, DateTimeOffset dateRangeEnd)
+    {
+        var response = await _httpClient.PostAsJsonAsync(
+            GetReportApiRequestUri($"workspaces/{workspaceId}/reports/summary"), 
+            new GetSummaryReportRequest(dateRangeStart, dateRangeEnd));
+
+        var requestJson = await response.RequestMessage.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+            return new GetSummaryReportResponse { StatusCode = response.StatusCode };
+        var summaryReport = await response.Content.ReadFromJsonAsync<ICollection<ProjectDto>>(options: _serializerOptions);
+        return new GetSummaryReportResponse { StatusCode = response.StatusCode, Data = summaryReport };
     }
 
     private static Uri GetApiRequestUri(string requestUri) => new(new Uri(c_apiBaseUri), requestUri);

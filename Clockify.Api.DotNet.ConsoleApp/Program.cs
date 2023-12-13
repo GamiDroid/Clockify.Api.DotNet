@@ -9,8 +9,21 @@ if (!response.IsSuccessStatusCode)
     return;
 
 var currentUserInfo = response.CurrentUserInfo;
-var response2 = await clockify.GetProjectsAsync(currentUserInfo.DefaultWorkspace);
 
-if (!response2.IsSuccessStatusCode) return;
+try
+{
+    var response2 = await clockify.GetSummaryReportAsync(
+        currentUserInfo.DefaultWorkspace,
+        dateRangeStart: new DateTime(2023, 11, 27),
+        dateRangeEnd: new DateTime(2023, 12, 03, 23, 59, 59));
 
-Console.WriteLine($"projects {response2.Projects.Count}");
+    if (!response2.IsSuccessStatusCode) return;
+
+    Console.WriteLine($"projects {response2.SummaryReport}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+}
+
+Console.ReadLine();
