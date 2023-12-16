@@ -55,7 +55,10 @@ public class ClockifyApiClient : IDisposable
         var requestJson = await response.RequestMessage.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
-            return new GetSummaryReportResponse { StatusCode = response.StatusCode };
+        {
+            var message = await response.Content.ReadAsStringAsync();
+            return new GetSummaryReportResponse { StatusCode = response.StatusCode, Message = message };
+        }
         var summaryReport = await response.Content.ReadFromJsonAsync<ICollection<ProjectDto>>(options: _serializerOptions);
         return new GetSummaryReportResponse { StatusCode = response.StatusCode, Data = summaryReport };
     }
