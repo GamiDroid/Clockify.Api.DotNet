@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Clockify.Api.DotNet.Models;
 
@@ -11,23 +11,25 @@ public sealed class SummaryFilter
     public string? SummaryChartType { get; set; }
 }
 
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SortColumnType
 {
-    Group,
-    Duration,
-    Amount,
-    Date
+    GROUP,
+    DURATION,
+    AMOUNT,
+    DATE
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum GroupType
 {
-    Project,
-    Client,
-    Task,
-    Tag,
-    Date,
-    User,
-    UserGroup,
-    [EnumMember(Value = "TIMEENTRY")]
-    TimeEntry
+    PROJECT,
+    CLIENT,
+    TASK,
+    TAG,
+    DATE,
+    USER,
+    USERGROUP,
+    TIMEENTRY
 }

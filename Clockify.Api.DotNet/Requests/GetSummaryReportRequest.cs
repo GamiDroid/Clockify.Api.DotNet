@@ -1,31 +1,32 @@
 ﻿using Clockify.Api.DotNet.Models;
-using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Clockify.Api.DotNet.Requests;
 public sealed class GetSummaryReportRequest
 {
-    public GetSummaryReportRequest(DateTimeOffset dateRangeStart, DateTimeOffset dateRangeEnd)
+    public GetSummaryReportRequest(DateTimeOffset dateRangeStart, DateTimeOffset dateRangeEnd, SummaryFilter summaryFilter)
     {
         DateRangeStart = dateRangeStart;
         DateRangeEnd = dateRangeEnd;
+        SummaryFilter = summaryFilter;
     }
 
     // REQUIRED
     public DateTimeOffset DateRangeStart { get; set; }
     public DateTimeOffset DateRangeEnd { get; set; }
-    public SummaryFilter? SummaryFilter { get; set; }
+    public SummaryFilter SummaryFilter { get; set; }
 
     // SETTINGS (OPTIONAL)
-    public SortOrderType SortOrder { get; set; }
-    public ExportType ExportType { get; set; }
+    public SortOrderType? SortOrder { get; set; }
+    public ExportType? ExportType { get; set; }
     public bool? Rounding { get; set; }
-    public AmountShownType AmountShown { get; set; }
+    public AmountShownType? AmountShown { get; set; }
     public string? TimeZone { get; set; }
 
     // FILTERS (OPTIONAL)
     public ContainsUsersFilter? Users { get; set; }
-    public InvoicingStateType InvoicingState { get; set; }
-    public ApprovalStateType ApprovalState { get; set; }
+    public InvoicingStateType? InvoicingState { get; set; }
+    public ApprovalStateType? ApprovalState { get; set; }
     public string? UserGroups { get; set; }
     public ContainsArchivedFilter? Clients { get; set; }
     public string? Projects { get; set; }
@@ -37,14 +38,14 @@ public sealed class GetSummaryReportRequest
     public ICollection<CustomFieldsFilter>? CustomFields { get; set; }
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SortOrderType
 {
-    [EnumMember(Value = "ASCENDING")] 
     ASCENDING,
-    [EnumMember(Value = "DESCENDING")]
     DESCENDING
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ExportType
 {
     JSON,
@@ -53,24 +54,27 @@ public enum ExportType
     PDF
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum AmountShownType
 {
-    HideAmount,
-    Eared,
-    Cost,
-    Profit
+    HIDE_AMOUNT,
+    EARED,
+    COST,
+    PROFIT
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum InvoicingStateType
 {
-    All,
-    Invoiced,
-    Uninvoiced
+    ALL,
+    INVOICED,
+    UNINVOICED
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ApprovalStateType
 {
-    Approved,
-    Unapproved,
-    All
+    APPROVED,
+    UNAPPROVED,
+    ALL
 }
