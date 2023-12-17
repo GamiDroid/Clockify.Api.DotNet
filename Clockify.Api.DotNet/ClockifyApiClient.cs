@@ -23,6 +23,7 @@ public class ClockifyApiClient : IDisposable
         _httpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
         _serializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
         {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             Converters = {
                 new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper),
                 new DateTimeOffsetConverter(),
@@ -48,16 +49,10 @@ public class ClockifyApiClient : IDisposable
         return new GetProjectsResponse { StatusCode = response.StatusCode, Data = projects };
     }
 
-    public async Task<GetSummaryReportResponse> GetSummaryReportAsync(string workspaceId, DateTimeOffset dateRangeStart, DateTimeOffset dateRangeEnd)
+    public async Task<GetSummaryReportResponse> GetSummaryReportAsync(string? workspaceId, GetSummaryReportRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync(
-            GetReportApiRequestUri($"workspaces/{workspaceId}/reports/summary"), 
-            new GetSummaryReportRequest(dateRangeStart, dateRangeEnd, new SummaryFilter
-            {
-                SummaryChartType = "PROJECT",
-                SortColumn = SortColumnType.GROUP,
-                Groups = [GroupType.PROJECT, GroupType.TASK, GroupType.TIMEENTRY]
-            }));
+            GetReportApiRequestUri($"workspaces/{workspaceId}/reports/summary"), request, options: _serializerOptions);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -74,6 +69,16 @@ public class ClockifyApiClient : IDisposable
         }
         var summaryReport = await response.Content.ReadFromJsonAsync<SummaryReportDto>(options: _serializerOptions);
         return new GetSummaryReportResponse { StatusCode = response.StatusCode, Data = summaryReport };
+    }
+
+    public Task<GetSummaryReportResponse> GetSummaryReportAsync(string? workspaceId, DateTimeOffset dateRangeStart, DateTimeOffset dateRangeEnd)
+    {
+        return GetSummaryReportAsync(workspaceId, new GetSummaryReportRequest(dateRangeStart, dateRangeEnd, new SummaryFilter
+        {
+            SummaryChartType = "PROJECT",
+            SortColumn = SortColumnType.GROUP,
+            Groups = [GroupType.PROJECT, GroupType.TASK, GroupType.TIMEENTRY]
+        }));
     }
 
     private static Uri GetApiRequestUri(string requestUri) => new(new Uri(c_apiBaseUri), requestUri);
