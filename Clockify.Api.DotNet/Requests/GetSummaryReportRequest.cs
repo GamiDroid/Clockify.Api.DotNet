@@ -1,4 +1,5 @@
-﻿using Clockify.Api.DotNet.Models;
+﻿using Clockify.Api.DotNet.Converters;
+using Clockify.Api.DotNet.Models;
 using System.Text.Json.Serialization;
 
 namespace Clockify.Api.DotNet.Requests;
@@ -12,7 +13,9 @@ public sealed class GetSummaryReportRequest
     }
 
     // REQUIRED
+    [JsonConverter(typeof(DateTimeOffsetConverter))]
     public DateTimeOffset DateRangeStart { get; set; }
+    [JsonConverter(typeof(DateTimeOffsetConverter))]
     public DateTimeOffset DateRangeEnd { get; set; }
     public SummaryFilter SummaryFilter { get; set; }
 
