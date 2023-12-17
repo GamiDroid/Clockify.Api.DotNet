@@ -24,6 +24,7 @@ public class ClockifyApiClient : IDisposable
         {
             Converters = {
                 new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper),
+                new DateTimeOffsetConverter(),
             },
         };
     }
