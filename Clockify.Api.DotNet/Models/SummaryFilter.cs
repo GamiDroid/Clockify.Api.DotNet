@@ -4,7 +4,7 @@ namespace Clockify.Api.DotNet.Models;
 
 public sealed class SummaryFilter
 {
-    public ICollection<GroupType> Groups { get; set; } = Array.Empty<GroupType>();
+    public ICollection<GroupType>? Groups { get; set; }
 
     // SETTINGS (OPTIONAL)
     public SortColumnType SortColumn { get; set; }

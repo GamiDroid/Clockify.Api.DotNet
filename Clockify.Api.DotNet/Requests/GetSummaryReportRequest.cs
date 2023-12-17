@@ -39,6 +39,9 @@ public sealed class GetSummaryReportRequest
     public string? Description { get; set; }
     public bool? WithoutDescription { get; set; }
     public ICollection<CustomFieldsFilter>? CustomFields { get; set; }
+    public ICollection<CustomFieldsFilter>? UserCustomFields { get; set; }
+    public string? ZoomLevel { get; set; }
+    public string? UserLocale { get; set; }
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
