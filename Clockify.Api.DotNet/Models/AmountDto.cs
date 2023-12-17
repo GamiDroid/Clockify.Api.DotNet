@@ -2,7 +2,7 @@
 
 public sealed class AmountDto
 {
-    public int Value { get; set; }
+    public decimal Value { get; set; }
     public AmountType Type { get; set; }
 }
 

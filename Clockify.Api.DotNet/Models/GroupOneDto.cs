@@ -1,9 +1,13 @@
-﻿namespace Clockify.Api.DotNet.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Clockify.Api.DotNet.Models;
 
 public sealed class GroupOneDto
 {
-    public int Amounts { get; set; }
+    public ICollection<AmountDto> Amounts { get; set; } = [];
     public long Duration { get; set; }
+
+    [JsonPropertyName("_id")]
     public string? Id { get; set; }
     public string? Name { get; set; }
     public string? NameLowerCase { get; set; }
